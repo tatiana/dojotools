@@ -30,7 +30,8 @@ from time import ctime
 from optparse import OptionParser
 import gtk
 import gobject
-import arduino
+from arduino import Arduino
+import glob
 
 from ui import UserInterface
 
@@ -81,6 +82,11 @@ class Monitor(object):
         self.ui = ui
         self.commit = commit
         self.arduino = arduino
+        if arduino:
+            self.my_board = Arduino(glob.glob('/dev/ttyUSB*')[0])
+            self.my_board.output([7, 8])
+            self.my_board.setHigh(7)
+            self.my_board.setLow(8)
 
         gobject.timeout_add(1000, self.check)
 
@@ -154,9 +160,11 @@ class Monitor(object):
         status = process.wait()
         try:
             if self.arduino and status:
-                arduino.send_message('R')
+                self.my_board.setHigh(7)
+                self.my_board.setLow(8)
             elif self.arduino and not status:
-                arduino.send_message('G')
+                self.my_board.setHigh(8)
+                self.my_board.setLow(7)
         except:
             print 'Algum erro de comunicação com o Arduino ocorreu!'
 
