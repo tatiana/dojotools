@@ -1,5 +1,5 @@
-#define PIN_RED 7
-#define PIN_GREEN 8
+#define PIN_RED 4
+#define PIN_GREEN 2
 #define DELAY_TIME 700
 
 void setup(){
@@ -65,7 +65,8 @@ void loop(){
             } else if (pinIsOn(PIN_RED)){
               currentPin = PIN_RED;
             }
-            blinkAll();
+            blinkPin(currentPin);
+            //blinkAll();
             digitalWrite(currentPin, HIGH);
         }
     }
